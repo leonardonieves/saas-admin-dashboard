@@ -45,24 +45,32 @@ export function Sidebar() {
       isCollapsed ? 'w-20' : 'w-64'
     } p-4`}>
       {/* Logo */}
-      <div className="mb-8 flex items-center justify-between">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center flex-shrink-0">
-            <Zap className="w-6 h-6 text-primary-foreground" />
+      <div className={`mb-8 flex items-center transition-all duration-300 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+        <button
+          onClick={toggleSidebar}
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          <div className={`bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+            isCollapsed ? 'w-8 h-8' : 'w-10 h-10'
+          }`}>
+            <Zap className={`text-primary-foreground transition-all duration-300 ${isCollapsed ? 'w-4 h-4' : 'w-6 h-6'}`} />
           </div>
           {!isCollapsed && (
             <span className="text-xl font-bold text-sidebar-foreground whitespace-nowrap">
               DashAI
             </span>
           )}
-        </div>
-        <button
-          onClick={toggleSidebar}
-          className="p-1 hover:bg-sidebar-accent/50 rounded-lg transition-colors text-sidebar-foreground"
-          aria-label="Toggle sidebar"
-        >
-          <ChevronLeft className={`w-5 h-5 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
         </button>
+        {!isCollapsed && (
+          <button
+            onClick={toggleSidebar}
+            className="p-1 hover:bg-sidebar-accent/50 rounded-lg transition-colors text-sidebar-foreground"
+            aria-label="Toggle sidebar"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Navigation */}
