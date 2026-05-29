@@ -1,6 +1,3 @@
-import { Metadata } from 'next';
-import { Sidebar } from '@/components/dashboard/sidebar';
-import { TopNav } from '@/components/dashboard/top-nav';
 import { MetricsCards } from '@/components/dashboard/metrics-cards';
 import { AnalyticsCharts } from '@/components/dashboard/analytics-charts';
 import { ActivityFeed } from '@/components/dashboard/activity-feed';
@@ -8,20 +5,9 @@ import { UsersTable } from '@/components/dashboard/users-table';
 import { AIInsightsPanel } from '@/components/dashboard/ai-insights-panel';
 import { QuickActions } from '@/components/dashboard/quick-actions';
 
-export const metadata: Metadata = {
-  title: 'Dashboard - DashAI',
-  description: 'AI-Powered SaaS Admin Dashboard',
-};
-
 export default function DashboardPage() {
   return (
-    <div className="bg-background text-foreground">
-      <Sidebar />
-      <TopNav />
-
-      {/* Main Content */}
-      <main className="ml-64 mt-16 p-8">
-        <div className="max-w-7xl">
+    <div className="max-w-7xl">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
@@ -83,10 +69,8 @@ export default function DashboardPage() {
           {/* Users Table */}
           <UsersTable />
 
-          {/* Footer spacing */}
-          <div className="mt-8 pb-8"></div>
-        </div>
-      </main>
+      {/* Footer spacing */}
+      <div className="mt-8 pb-8"></div>
     </div>
   );
 }
