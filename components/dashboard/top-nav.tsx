@@ -3,10 +3,15 @@
 import { Search, Bell, HelpCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useSidebar } from '@/lib/sidebar-context';
 
 export function TopNav() {
+  const { isCollapsed } = useSidebar();
+
   return (
-    <header className="fixed top-0 left-64 right-0 h-16 border-b border-border bg-background/80 backdrop-blur-sm z-40">
+    <header className={`fixed top-0 right-0 h-16 border-b border-border bg-background/80 backdrop-blur-sm z-40 transition-all duration-300 ease-in-out ${
+      isCollapsed ? 'left-20' : 'left-64'
+    }`}>
       <div className="h-full px-8 flex items-center justify-between">
         {/* Search */}
         <div className="flex-1 max-w-sm">

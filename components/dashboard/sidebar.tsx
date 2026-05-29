@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
+import { useSidebar } from '@/lib/sidebar-context';
 import {
   LayoutDashboard,
   BarChart3,
@@ -9,12 +10,14 @@ import {
   Settings,
   LogOut,
   Zap,
+  ChevronLeft,
 } from 'lucide-react';
 
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { isCollapsed, toggleSidebar } = useSidebar();
 
   const handleLogout = () => {
     logout();
@@ -38,17 +41,28 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r border-sidebar-border bg-sidebar p-6 flex flex-col">
+    <aside className={`fixed left-0 top-0 h-screen border-r border-sidebar-border bg-sidebar flex flex-col transition-all duration-300 ease-in-out ${
+      isCollapsed ? 'w-20' : 'w-64'
+    } p-4`}>
       {/* Logo */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+      <div className="mb-8 flex items-center justify-between">
+        <div className="flex items-center gap-2 overflow-hidden">
+          <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center flex-shrink-0">
             <Zap className="w-6 h-6 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-sidebar-foreground">
-            DashAI
-          </span>
+          {!isCollapsed && (
+            <span className="text-xl font-bold text-sidebar-foreground whitespace-nowrap">
+              DashAI
+            </span>
+          )}
         </div>
+        <button
+          onClick={toggleSidebar}
+          className="p-1 hover:bg-sidebar-accent/50 rounded-lg transition-colors text-sidebar-foreground"
+          aria-label="Toggle sidebar"
+        >
+          <ChevronLeft className={`w-5 h-5 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
+        </button>
       </div>
 
       {/* Navigation */}
@@ -68,26 +82,29 @@ export function Sidebar() {
       {/* User Info */}
       <div className="border-t border-sidebar-border pt-4 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
             <span className="text-sm font-semibold text-accent">
               {user ? getInitials(user.name) : 'U'}
             </span>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">
-              {user?.name || 'User'}
-            </p>
-            <p className="text-xs text-muted-foreground truncate">
-              Admin
-            </p>
-          </div>
+          {!isCollapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-sidebar-foreground truncate">
+                {user?.name || 'User'}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                Admin
+              </p>
+            </div>
+          )}
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 text-muted-foreground hover:text-sidebar-foreground transition-colors px-4 py-2 rounded-lg hover:bg-sidebar-accent/50"
+          className={`w-full flex items-center gap-2 text-muted-foreground hover:text-sidebar-foreground transition-colors px-3 py-2 rounded-lg hover:bg-sidebar-accent/50 justify-center ${!isCollapsed ? 'justify-start' : ''}`}
+          title={isCollapsed ? 'Logout' : ''}
         >
-          <LogOut className="w-4 h-4" />
-          <span className="text-sm">Logout</span>
+          <LogOut className="w-4 h-4 flex-shrink-0" />
+          {!isCollapsed && <span className="text-sm">Logout</span>}
         </button>
       </div>
     </aside>
@@ -107,17 +124,22 @@ function NavItem({
   active?: boolean;
   onClick?: () => void;
 }) {
+  const { isCollapsed } = useSidebar();
+
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
+      title={isCollapsed ? label : ''}
+      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors justify-center ${
+        isCollapsed ? 'justify-center' : 'justify-start'
+      } ${
         active
           ? 'bg-sidebar-accent text-sidebar-accent-foreground'
           : 'text-sidebar-foreground hover:bg-sidebar-accent/50'
       }`}
     >
-      <Icon className="w-5 h-5" />
-      <span className="text-sm font-medium">{label}</span>
+      <Icon className="w-5 h-5 flex-shrink-0" />
+      {!isCollapsed && <span className="text-sm font-medium">{label}</span>}
     </button>
   );
 }
